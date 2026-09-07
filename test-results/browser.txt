@@ -1,8 +1,14 @@
 390px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
+390px: sugestões físicas aprovadas — 21 itens em três categorias, abertura por teclado, fechamento, atributos acessíveis e nenhum preço ou ação de pagamento
+390px: seis presentes, valor livre, três formas de fechar, foco, teclado e modal sem rolagem horizontal aprovados
 768px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
+768px: sugestões físicas aprovadas — 21 itens em três categorias, abertura por teclado, fechamento, atributos acessíveis e nenhum preço ou ação de pagamento
+768px: seis presentes, valor livre, três formas de fechar, foco, teclado e modal sem rolagem horizontal aprovados
 1280px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
-Mapas e cartão sem configuração: sem navegação; aviso exibido
-Presentear: seleciona contribuição e move foco ao Pix; placeholder não é copiado
+1280px: sugestões físicas aprovadas — 21 itens em três categorias, abertura por teclado, fechamento, atributos acessíveis e nenhum preço ou ação de pagamento
+1280px: seis presentes, valor livre, três formas de fechar, foco, teclado e modal sem rolagem horizontal aprovados
+Mapas sem configuração: aviso; cartão sem link válido: oculto
+Pix não configurado: placeholder não é copiado
 WhatsApp não configurado: confirmação não enviada e aviso explícito
 Pix com área de transferência simulada: sucesso e falha tratados corretamente
 Movimento reduzido respeitado

@@ -48,22 +48,108 @@ const deadline = setTimeout(() => { console.error('Tempo limite do teste de nave
     const capture = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
     writeFileSync(path.join(__dirname, `../test-results/${width}px.png`), Buffer.from(capture.data, 'base64'));
     report.push(`${width}px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão ${contrast.toFixed(2)}:1`);
+    assert.equal(await evaluate('document.getElementById("home-gifts-title").textContent'), 'Sugestões para o nosso lar');
+    assert.match(await evaluate('document.querySelector(".home-gifts-intro").textContent'), /Sua presença é o nosso maior presente/);
+    assert.equal(await evaluate('document.getElementById("toggle-home-gifts").getAttribute("aria-controls")'), 'home-gifts-list');
+    assert.equal(await evaluate('document.getElementById("home-gifts-list").hidden'), true);
+    await evaluate('document.querySelector(".home-gifts").scrollIntoView({behavior:"instant",block:"start"})');
+    if (width === 390) {
+      const closed = await send('Page.captureScreenshot', { format: 'png' });
+      writeFileSync(path.join(__dirname, '../test-results/home-closed-390px.png'), Buffer.from(closed.data, 'base64'));
+    }
+    await evaluate('document.getElementById("toggle-home-gifts").focus({preventScroll:true})');
+    await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
+    await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+    assert.equal(await evaluate('document.getElementById("toggle-home-gifts").getAttribute("aria-expanded")'), 'true');
+    assert.equal(await evaluate('document.getElementById("toggle-home-gifts").textContent'), 'Ocultar sugestões');
+    assert.equal(await evaluate('document.getElementById("home-gifts-list").hidden'), false);
+    const categories = await evaluate('[...document.querySelectorAll(".home-gifts-category")].map(el=>({categoria:el.querySelector("h4").textContent,itens:[...el.querySelectorAll("li")].map(li=>li.textContent)}))');
+    assert.deepEqual(categories, await evaluate('window.WEDDING_CONFIG.presentesFisicos'));
+    assert.deepEqual(categories.map(c=>c.itens.length), [14,4,3]);
+    assert.equal(await evaluate('document.querySelectorAll("#home-gifts-list button,#home-gifts-list a,#home-gifts-list input").length'), 0);
+    assert.equal(await evaluate('/R\$|Presentear/.test(document.getElementById("home-gifts-list").textContent)'), false);
+    await evaluate('document.querySelector(".home-gifts-category li").click()');
+    assert.equal(await evaluate('document.getElementById("pix").open'), false);
+    assert.equal(await evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth'), true);
+    await sleep(250);
+    if (width === 390) {
+      const size = await send('Page.getLayoutMetrics');
+      const opened = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x:0, y:await evaluate('window.scrollY'), width:390, height:Math.ceil(await evaluate('document.querySelector(".home-gifts").getBoundingClientRect().height')), scale:1 } });
+      writeFileSync(path.join(__dirname, '../test-results/home-open-390px.png'), Buffer.from(opened.data, 'base64'));
+    }
+    await evaluate('document.getElementById("toggle-home-gifts").click()');
+    assert.equal(await evaluate('document.getElementById("toggle-home-gifts").getAttribute("aria-expanded")'), 'false');
+    assert.equal(await evaluate('document.getElementById("home-gifts-list").hidden'), true);
+    assert.equal(await evaluate('document.getElementById("toggle-home-gifts").textContent'), 'Ver sugestões para o nosso lar');
+    report.push(`${width}px: sugestões físicas aprovadas — 21 itens em três categorias, abertura por teclado, fechamento, atributos acessíveis e nenhum preço ou ação de pagamento`);
+    assert.equal(await evaluate('document.getElementById("pix").open'), false);
+    await evaluate('document.getElementById("copy-pix").focus()');
+    assert.notEqual(await evaluate('document.activeElement.id'), 'copy-pix');
+    const giftData = await evaluate('[...document.querySelectorAll(".gift-card")].map(el=>({name:el.querySelector("h3").textContent,description:el.querySelector("p").textContent}))');
+    for (let i = 0; i < 6; i++) {
+      await evaluate(`document.querySelectorAll('.gift-card button')[${i}].scrollIntoView({behavior:'instant',block:'center'});document.querySelectorAll('.gift-card button')[${i}].focus()`);
+      const oldScroll = await evaluate('window.scrollY');
+      await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' });
+      await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 });
+      assert.equal(await evaluate('document.getElementById("pix").open'), true, `Modal ${width}px presente ${i}; erros ${errors.join(';')}; foco ${await evaluate('document.activeElement.outerHTML')}`);
+      assert.equal(await evaluate('document.getElementById("selected-gift").textContent'), 'Você escolheu: ' + giftData[i].name);
+      assert.equal(await evaluate('document.getElementById("gift-description").textContent'), giftData[i].description);
+      assert.equal(await evaluate('document.getElementById("free-value-group").hidden'), i !== 5);
+      if (i < 5) assert.equal(await evaluate('document.getElementById("gift-value").textContent.replace(/\u00a0/g," ")'), `Valor do presente: R$ ${[200,150,80,250,350][i]},00`);
+      else {
+        for (const value of ['0', '-10', '1,234', 'abc']) {
+          await evaluate(`document.getElementById('free-value').value=${JSON.stringify(value)};document.getElementById('free-value').dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('copy-pix').click()`);
+          assert.equal(await evaluate('document.getElementById("free-value").getAttribute("aria-invalid")'), 'true');
+          assert.equal(await evaluate('document.activeElement.id'), 'free-value');
+        }
+        await evaluate('document.getElementById("free-value").value="1.250,90";document.getElementById("free-value").dispatchEvent(new Event("input",{bubbles:true}))');
+        assert.equal(await evaluate('document.getElementById("free-value").getAttribute("aria-invalid")'), 'false');
+      }
+      assert.equal(await evaluate('getComputedStyle(document.body).position'), 'fixed');
+      assert.equal(await evaluate('document.getElementById("pix").scrollWidth <= document.getElementById("pix").clientWidth'), true);
+      await evaluate('document.getElementById("close-payment").focus()');
+      for (let t = 0; t < 6; t++) {
+        await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+        assert.equal(await evaluate('document.getElementById("pix").contains(document.activeElement)'), true);
+      }
+      if (i === 0) {
+        await evaluate('document.getElementById("pix").scrollTop=0;document.getElementById("close-payment").focus()');
+        const modalCapture = await send('Page.captureScreenshot', { format: 'png' });
+        writeFileSync(path.join(__dirname, `../test-results/modal-${width}px.png`), Buffer.from(modalCapture.data, 'base64'));
+      }
+      if (i % 3 === 0) await evaluate('document.getElementById("close-payment").click()');
+      else if (i % 3 === 1) await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+      else {
+        await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: 2, y: 2, button: 'left', clickCount: 1 });
+        await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: 2, y: 2, button: 'left', clickCount: 1 });
+      }
+      await sleep(50);
+      assert.equal(await evaluate('document.getElementById("pix").open'), false);
+      assert.equal(await evaluate(`document.activeElement===document.querySelectorAll('.gift-card button')[${i}]`), true);
+      assert.equal(await evaluate('document.getElementById("selected-gift").textContent'), '');
+      assert.equal(await evaluate('document.getElementById("free-value").value'), '');
+      assert.ok(Math.abs(await evaluate('window.scrollY') - oldScroll) <= 1, 'Posição da página restaurada');
+    }
+    report.push(`${width}px: seis presentes, valor livre, três formas de fechar, foco, teclado e modal sem rolagem horizontal aprovados`);
   }
-  for (const key of ['mapaCerimonia', 'mapaRecepcao', 'cartao']) {
+  for (const key of ['mapaCerimonia', 'mapaRecepcao']) {
     assert.equal(await evaluate(`document.querySelector('[data-link="${key}"]').hasAttribute('href')`), false);
     await evaluate(`document.querySelector('[data-link="${key}"]').click()`);
     assert.equal(await evaluate('document.getElementById("notice").hidden'), false);
   }
-  report.push('Mapas e cartão sem configuração: sem navegação; aviso exibido');
+  assert.equal(await evaluate('document.querySelector("[data-link=cartao]").hidden'), true);
+  report.push('Mapas sem configuração: aviso; cartão sem link válido: oculto');
+  await evaluate('document.querySelector(".gift-card button").click()');
   await evaluate('document.getElementById("copy-pix").click()');
   assert.match(await evaluate('document.getElementById("pix-status").textContent'), /ainda não está disponível/);
-  await evaluate('document.querySelector(".gift-card button").click()');
   assert.match(await evaluate('document.getElementById("selected-gift").textContent'), /Jantar romântico/);
-  assert.equal(await evaluate('document.activeElement.id'), 'copy-pix');
-  report.push('Presentear: seleciona contribuição e move foco ao Pix; placeholder não é copiado');
+  report.push('Pix não configurado: placeholder não é copiado');
+  await evaluate('document.getElementById("close-payment").click()');
+  await sleep(50);
   await evaluate('document.getElementById("guest-name").value="Convidado de teste"; document.getElementById("rsvp-form").requestSubmit()');
   assert.match(await evaluate('document.getElementById("rsvp-status").textContent'), /não foi enviada/);
   report.push('WhatsApp não configurado: confirmação não enviada e aviso explícito');
+  await evaluate('document.querySelector(".gift-card button").click()');
   await evaluate('window.WEDDING_CONFIG.pix="CHAVE-SINTETICA-DE-TESTE"; window.WEDDING_CONFIG.favorecido="FAVORECIDO DE TESTE"; Object.defineProperty(navigator,"clipboard",{configurable:true,value:{writeText:async text=>{window.copiedTestValue=text}}});document.getElementById("copy-pix").click()');
   assert.equal(await evaluate('window.copiedTestValue'), 'CHAVE-SINTETICA-DE-TESTE');
   assert.match(await evaluate('document.getElementById("pix-status").textContent'), /copiada/);

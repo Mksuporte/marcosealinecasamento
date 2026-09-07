@@ -2,7 +2,11 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { configured, safeLink, whatsappLink, localAsset } = require('../app');
+const { configured, safeLink, whatsappLink, localAsset, parseMoney } = require('../app');
+test('valor livre aceita reais positivos e rejeita formatos ambíguos ou inválidos', () => {
+  for (const [input, cents] of [['150',15000],['150,00',15000],['1.250,90',125090],['0,01',1],[' 80,5 ',8050]]) assert.equal(parseMoney(input), cents);
+  for (const input of ['', '0', '0,00', '-1', '-50,00', '1.50', '1,234', '1e3', 'Infinity', 'abc', 'R$ 20', '1,2,3', '999999999999999999']) assert.equal(parseMoney(input), null, input);
+});
 test('campos provisórios nunca são tratados como dados reais', () => {
   for (const value of ['', undefined, '[CHAVE PIX]', '[NÚMERO DO WHATSAPP]', '   ']) assert.equal(configured(value), false);
   assert.equal(configured('exemplo-de-teste'), true);

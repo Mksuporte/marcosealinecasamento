@@ -1,4 +1,31 @@
-# Verificação atual — terracota, história e data
+# Verificação atual — sugestões para o lar
+
+- `node --test tests/*.test.js`: **7 passaram, 0 falharam**. Sintaxe de `app.js` e `config.js` aprovada.
+- `node tests/browser.cjs`: **passou em 390, 768 e 1280 px**. Título, texto acolhedor, três categorias e 21 itens renderizados de acordo com `config.js` (14 + 4 + 3).
+- Bloco fechado inicialmente; abertura com Enter e fechamento por botão; rótulos alternados, `aria-expanded` e `aria-controls` verificados. Conteúdo fechado usa `hidden`; animação de abertura desativada com movimento reduzido.
+- Nenhum preço, botão Presentear, link ou campo dentro das sugestões. Clique em item físico não abre o modal. Sem estados de reserva.
+- Lista e modal sem rolagem horizontal nas três larguras. Todos os testes anteriores de contribuições, valor livre, Pix simulado, fechamento por botão/Esc/clique externo, foco, posição da página e WhatsApp continuam passando. Nenhuma exceção JavaScript.
+- Capturas novas: `test-results/home-closed-390px.png` e `test-results/home-open-390px.png` (aberta mostra o bloco completo em largura de celular).
+- Alterados: `config.js`, `index.html`, `app.js`, `styles.css`, `tests/browser.cjs`, `README.md`, `TEST-RESULTS.md`. Capturas gerais, capturas de modal e `test-results/browser.txt` regenerados.
+- Sem deploy, publicação, git add, commit ou push.
+
+---
+
+# Registro anterior — modal de presentes
+
+- `node --test tests/*.test.js`: **7 passaram, 0 falharam**, incluindo validação monetária brasileira, valores positivos e rejeição de formatos inválidos. Sintaxe de `app.js` e `tests/browser.cjs` aprovada.
+- `node tests/browser.cjs`: **passou em 390, 768 e 1280 px**. Seis presentes testados em cada largura: abertura pelo teclado, nome, descrição, valor original, campo livre e ausência de rolagem horizontal no modal.
+- Modal fechado inicialmente e fora do foco; fundo inerte pelo `dialog` nativo e rolagem bloqueada. Tab permanece nos controles. Fechamento por botão, Esc e clique externo testado; seleção e valor livre limpos; foco e posição da página restaurados.
+- Pix: placeholder bloqueado, sucesso e falha de cópia simulados. Valores livres inválidos impedem a ação. A transferência continua externa ao site, com orientação explícita sobre valor manual.
+- Cartão oculto sem link válido. QR verdadeiro continua configurável; nenhum QR ou link foi inventado.
+- Nomes, história, data, foto, cartões e demais funcionalidades preservados. Movimentos reduzidos respeitados; nenhuma exceção JavaScript.
+- Capturas do modal: `test-results/modal-390px.png`, `test-results/modal-768px.png`, `test-results/modal-1280px.png`. Desktop em janela limitada; celular com rolagem interna vertical.
+- Alterados: `index.html`, `app.js`, `styles.css`, `tests/app.test.js`, `tests/browser.cjs`, `README.md`, `TEST-RESULTS.md`. Regenerados as três capturas gerais em `test-results` e `test-results/browser.txt`; adicionadas as três capturas do modal.
+- Nenhum deploy, publicação, git add, commit ou push.
+
+---
+
+# Registro anterior — terracota, história e data
 
 - Paleta central: terracota `#B85C45`, escuro `#8F4436`, claro `#D98A72`; fúcsia complementar. Botões, ornamentos, divisórias e detalhes de bordas atualizados; nenhum laranja antigo no CSS.
 - História substituída integralmente pelo texto solicitado, centralizado em `config.js`. Mantidos parágrafo alinhado à esquerda, largura máxima de 680 px, fonte de 17 px no desktop e 16 px no celular.

@@ -8,6 +8,8 @@ Abra `index.html` diretamente ou execute `node server.js` nesta pasta e acesse *
 
 ## Personalizar
 
+- Sugestões físicas: edite `presentesFisicos` em `config.js`. A lista recolhível tem três categorias e é somente informativa, sem preços, links de compra, reservas ou integração com o modal Pix.
+
 - Edite `config.js`: nomes, data, história, igreja, recepção, orientações, links de mapas, favorecido, Pix e WhatsApp. Todos os dados pessoais estão entre colchetes.
 - WhatsApp: use somente dígitos, no formato internacional, com país e DDD. A confirmação só acontece quando o convidado envia a mensagem no WhatsApp.
 - Pix: prefira uma chave aleatória. Informe também o nome do favorecido. O botão não copia o placeholder. Confira ambos no aplicativo do banco.
@@ -15,7 +17,7 @@ Abra `index.html` diretamente ou execute `node server.js` nesta pasta e acesse *
 - Foto: salve uma foto autorizada em `assets/casal.jpg`, preencha `foto` e descreva-a em `fotoAlt`. A pasta `assets` pode ser criada quando os arquivos estiverem disponíveis. Formatos aceitos: PNG, JPEG e WebP. As decorações atuais são apenas CSS e caracteres tipográficos.
 - Mapas: use um link HTTPS do Google Maps específico para cada local. São aceitos google.com/maps, google.com.br/maps, maps.google.com, maps.app.goo.gl e goo.gl/maps.
 - Cartão: informe um link HTTPS externo do Mercado Pago ou PagBank/PagSeguro. Outros provedores exigem inclusão explícita na lista de domínios confiáveis em `safeLink`, no `app.js`.
-- Edite os presentes e valores na lista `gifts` em `app.js`. Selecionar um presente apenas destaca a contribuição sugerida; não cria cobrança, reserva ou checkout.
+- Edite os presentes e valores na lista `gifts` em `app.js`. Selecionar um presente abre um modal acessível, fechado inicialmente, com a contribuição escolhida; não cria cobrança, reserva ou checkout. A opção livre aceita reais positivos no formato brasileiro, como `150,00` ou `1.250,90`. O valor deve ser informado no aplicativo do banco: não é incorporado à chave ou ao QR estático. Cartão só aparece com link válido configurado. Fechar, Esc e clique externo limpam a seleção e devolvem o foco ao cartão de origem.
 - Para modificar o visual, edite `styles.css`. Os campos de configuração também aparecem no HTML como conteúdo provisório sem JavaScript; se precisar de conteúdo final sem JavaScript, atualize os textos correspondentes no `index.html`.
 
 ## Testes

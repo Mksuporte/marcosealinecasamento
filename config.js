@@ -27,4 +27,9 @@ window.WEDDING_CONFIG = {
   cartao: '[LINK EXTERNO DE PAGAMENTO]',
   // Formato internacional, apenas dígitos, incluindo país e DDD.
   whatsapp: '[NÚMERO DO WHATSAPP]',
+  presentesFisicos: [
+    { categoria: 'Cozinha e eletrodomésticos', itens: ['Lava-louças', 'Forno elétrico', 'Geladeira', 'Batedeira', 'Chaleira elétrica', 'Panela de pressão elétrica', 'Purificador de água', 'Depurador de ar para cozinha', 'Assadeiras', 'Travessas para servir', 'Jogo de jantar', 'Jogo de sobremesa', 'Jogo de copos', 'Lixeira de 100 litros'] },
+    { categoria: 'Conforto e cuidados com a casa', itens: ['Ar-condicionado', 'Aspirador robô', 'Jogo de cama queen', 'Toalhas de banho'] },
+    { categoria: 'Decoração e ambientes', itens: ['Poltrona', 'Luminárias', 'Itens de decoração'] },
+  ],
 };

@@ -1,4 +1,18 @@
-# Verificação atual — sugestões para o lar
+# Verificação atual — lírios decorativos
+
+- `lirio-laranja.png` encontrado na raiz, 1254 × 1254 px. Fundo realmente transparente: 1.294.131 pixels com alpha zero e 277.530 com transparência parcial. Sem fundo branco, preto ou quadriculado incorporado.
+- Original reutilizado diretamente nos oito ornamentos, sem duplicação, otimização, recoloração ou filtros. SHA-256: `DD87C900D4753B57D19DB6CF0F30683EEF8E36BC458C4E7117EDF94A185B4030`.
+- Substituídos: cabeçalho, dois cantos da abertura, moldura, confirmação, encerramento e os símbolos decorativos de sol/estrela em dois cartões. Demais ícones e asterisco obrigatório preservados.
+- `node --test tests/*.test.js`: **7 passaram, 0 falharam**.
+- `node tests/browser.cjs`: **passou em 390, 768 e 1280 px**. PNGs carregados; `alt=""`, `aria-hidden="true"`, dimensões declaradas, sem filtros; nenhuma estrela decorativa antiga; asterisco obrigatório presente. Nenhuma sobreposição com nomes/foto/botão e nenhuma rolagem horizontal.
+- Todos os testes anteriores de sugestões físicas, contribuições, modal, valor livre, foco, Pix simulado e WhatsApp passaram. Nenhuma exceção JavaScript.
+- Alterados: `index.html`, `app.js`, `styles.css`, `tests/browser.cjs`, `TEST-RESULTS.md`. Nenhum arquivo de imagem original alterado ou duplicado.
+- Criadas seis capturas: `test-results/lily-header-390px.png`, `test-results/lily-opening-390px.png`, `test-results/lily-footer-390px.png` e equivalentes `1280px`. Demais capturas existentes e `test-results/browser.txt` regenerados pelos testes.
+- Sem deploy, publicação ou operações de escrita no Git.
+
+---
+
+# Registro anterior — sugestões para o lar
 
 - `node --test tests/*.test.js`: **7 passaram, 0 falharam**. Sintaxe de `app.js` e `config.js` aprovada.
 - `node tests/browser.cjs`: **passou em 390, 768 e 1280 px**. Título, texto acolhedor, três categorias e 21 itens renderizados de acordo com `config.js` (14 + 4 + 3).

@@ -84,10 +84,10 @@
   });
   const gifts = [
     ['♧', 'Jantar romântico', 'Um brinde, duas taças e muitas histórias para contar.', 200],
-    ['☼', 'Passeio na lua de mel', 'Para nos perdermos por aí e encontrarmos boas memórias.', 150],
+    ['lily', 'Passeio na lua de mel', 'Para nos perdermos por aí e encontrarmos boas memórias.', 150],
     ['♨', 'Café dos recém-casados', 'Amor quentinho, pão na mesa e mais cinco minutinhos.', 80],
     ['⌂', 'Ajuda para o novo lar', 'Um pouquinho de carinho em cada cantinho da casa.', 250],
-    ['✧', 'Uma experiência especial', 'Uma aventura a dois para guardar para sempre.', 350],
+    ['lily', 'Uma experiência especial', 'Uma aventura a dois para guardar para sempre.', 350],
     ['♡', 'Presente com valor livre', 'O valor você escolhe. O carinho a gente guarda.', null],
   ];
   const currency = value => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
@@ -140,7 +140,8 @@
   gifts.forEach(([icon, name, description, value]) => {
     const card = document.createElement('article');
     card.className = 'gift-card';
-    const symbol = document.createElement('span'); symbol.className = 'gift-icon'; symbol.setAttribute('aria-hidden', 'true'); symbol.textContent = icon;
+    const symbol = document.createElement(icon === 'lily' ? 'img' : 'span'); symbol.className = 'gift-icon'; symbol.setAttribute('aria-hidden', 'true');
+    if (icon === 'lily') { symbol.classList.add('lily'); symbol.src = 'lirio-laranja.png'; symbol.alt = ''; symbol.width = 1254; symbol.height = 1254; } else symbol.textContent = icon;
     const title = document.createElement('h3'); title.textContent = name;
     const detail = document.createElement('p'); detail.textContent = description;
     const bottom = document.createElement('div'); bottom.className = 'gift-bottom';

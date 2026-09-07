@@ -34,6 +34,21 @@ const deadline = setTimeout(() => { console.error('Tempo limite do teste de nave
     assert.ok(photo && photo.nw > 0, 'Foto carregada');
     assert.ok(Math.abs(photo.w / photo.h - photo.nw / photo.nh) < .01, 'Proporção original preservada');
     assert.equal(photo.fit, 'contain');
+    for (let attempt=0;attempt<30;attempt++) { if(await evaluate('[...document.querySelectorAll("img.lily")].every(i=>i.complete&&i.naturalWidth>0)')) break; await sleep(100); }
+    assert.equal(await evaluate('[...document.querySelectorAll("img.lily")].every(i=>i.complete&&i.naturalWidth===1254&&i.alt===""&&i.getAttribute("aria-hidden")==="true"&&getComputedStyle(i).filter==="none")'), true);
+    assert.equal(await evaluate('document.querySelectorAll("img.lily").length'), 8);
+    assert.equal(await evaluate('/[✳✧☼★☆✦]/.test(document.body.textContent)'), false);
+    assert.equal(await evaluate('document.querySelector("label[for=guest-name]").textContent.includes("*")'), true);
+    assert.equal(await evaluate('[...document.querySelectorAll("img.lily")].every(i=>{const r=i.getBoundingClientRect();return r.left>=0&&r.right<=document.documentElement.clientWidth})'), true);
+    assert.equal(await evaluate('(()=>{const targets=[...document.querySelectorAll(".hero-frame h1,.hero-frame .button,.couple-photo")];return [...document.querySelectorAll(".hero-frame .lily")].every(i=>{const a=i.getBoundingClientRect();return targets.every(t=>{const b=t.getBoundingClientRect();return a.right<=b.left||a.left>=b.right||a.bottom<=b.top||a.top>=b.bottom})})})()'), true);
+    if(width===390||width===1280){
+      for(const [name,selector] of [['header','.site-header'],['opening','.hero'],['footer','footer']]){
+        const box=await evaluate(`(()=>{const r=document.querySelector('${selector}').getBoundingClientRect();return {x:0,y:r.top+scrollY,width:document.documentElement.clientWidth,height:Math.ceil(r.height),scale:1}})()`);
+        const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:true,clip:box});
+        writeFileSync(path.join(__dirname,`../test-results/lily-${name}-${width}px.png`),Buffer.from(shot.data,'base64'));
+      }
+    }
+    report.push(`${width}px: oito lírios carregados e decorativos, sem filtros, estrelas antigas ou sobreposição de nomes/foto/botão; asterisco obrigatório preservado`);
     assert.equal(await evaluate('document.getElementById("titulo").textContent'), 'Aline & Marcos');
     assert.equal(await evaluate('document.querySelector("[data-field=historia]").textContent === window.WEDDING_CONFIG.historia'), true);
     assert.equal(await evaluate('document.querySelector("[data-field=historia]").textContent.includes("[")'), false);

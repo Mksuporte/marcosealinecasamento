@@ -1,0 +1,9 @@
+390px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
+768px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
+1280px: foto e história carregadas; data correta; 6 presentes; sem rolagem horizontal; contraste do botão 4.51:1
+Mapas e cartão sem configuração: sem navegação; aviso exibido
+Presentear: seleciona contribuição e move foco ao Pix; placeholder não é copiado
+WhatsApp não configurado: confirmação não enviada e aviso explícito
+Pix com área de transferência simulada: sucesso e falha tratados corretamente
+Movimento reduzido respeitado
+Nenhuma exceção JavaScript no navegador
